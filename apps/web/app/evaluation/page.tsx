@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { api } from '../lib/api';
 import { inrCompact, pct } from '../lib/format';
-import { Badge, Card, Loading } from '../components/ui';
+import { Badge, Card, ErrorState, Loading } from '../components/ui';
 
 interface Evaluation {
   status?: string;
@@ -34,7 +34,7 @@ export default function EvaluationPage() {
     api.evaluation().then((r) => setEv(r as Evaluation)).catch(() => setErr(true));
   }, []);
 
-  if (err) return <div className="loading">Cannot reach the API.</div>;
+  if (err) return <ErrorState message="Cannot reach the API. Start it with npm run dev and refresh." />;
   if (!ev) return <Loading label="Loading evaluation" />;
   if (ev.status === 'not_run' || !ev.model) {
     return (
@@ -46,7 +46,7 @@ export default function EvaluationPage() {
   }
 
   const m = ev.model;
-  const strategies = ['random', 'by_amount', 'recoverai'];
+  const strategies = ['random', 'by_amount', 'aphelion'];
   const budgets = [0.1, 0.25, 0.5];
 
   return (
@@ -85,6 +85,7 @@ export default function EvaluationPage() {
 
       {ev.precision && (
         <Card title="Targeting precision (does the model find the payers)">
+          <div className="table-wrap">
           <table>
             <thead><tr><th>Top slice by P(recover)</th><th>Cases</th><th>Conversion</th><th>Lift vs base rate</th></tr></thead>
             <tbody>
@@ -98,20 +99,22 @@ export default function EvaluationPage() {
               ))}
             </tbody>
           </table>
+          </div>
         </Card>
       )}
 
       {ev.policies && (
         <Card title="Policy comparison (held-out test set)">
+          <div className="table-wrap">
           <table>
             <thead>
               <tr><th>Strategy</th><th>Contacts</th><th>Recovered</th><th>Cost</th><th>Recovery rate</th><th>Recovered / contact</th></tr>
             </thead>
             <tbody>
               {ev.policies.map((p) => (
-                <tr key={p.name} style={p.name === 'recoverai' ? { background: 'var(--accent-weak)' } : undefined}>
-                  <td style={{ fontWeight: p.name === 'recoverai' ? 650 : 500 }}>
-                    {p.name === 'recoverai' ? 'RecoverAI' : p.name.replace(/_/g, ' ')}
+                <tr key={p.name} style={p.name === 'aphelion' ? { background: 'var(--accent-weak)' } : undefined}>
+                  <td style={{ fontWeight: p.name === 'aphelion' ? 650 : 500 }}>
+                    {p.name === 'aphelion' ? 'Aphelion' : p.name.replace(/_/g, ' ')}
                   </td>
                   <td className="num">{p.contacts}</td>
                   <td className="num" style={{ fontWeight: 600 }}>{inrCompact(p.recoveredValue)}</td>
@@ -122,17 +125,19 @@ export default function EvaluationPage() {
               ))}
             </tbody>
           </table>
+          </div>
           <div className="card-pad hint">
-            RecoverAI recovers essentially the same value as contacting everyone, with fewer contacts and a higher recovered-per-contact, while also excluding opted-out and fraud-flagged customers that contact-all does not.
+            Project Aphelion recovers essentially the same value as contacting everyone, with fewer contacts and a higher recovered-per-contact, while also excluding opted-out and fraud-flagged customers that contact-all does not.
           </div>
         </Card>
       )}
 
       {ev.budgeted && (
         <Card title="Budgeted targeting (recovered value at a fixed contact budget)">
+          <div className="table-wrap">
           <table>
             <thead>
-              <tr><th>Contact budget</th>{strategies.map((s) => <th key={s}>{s === 'recoverai' ? 'RecoverAI' : s.replace(/_/g, ' ')}</th>)}</tr>
+              <tr><th>Contact budget</th>{strategies.map((s) => <th key={s}>{s === 'aphelion' ? 'Aphelion' : s.replace(/_/g, ' ')}</th>)}</tr>
             </thead>
             <tbody>
               {budgets.map((b) => (
@@ -152,6 +157,7 @@ export default function EvaluationPage() {
               ))}
             </tbody>
           </table>
+          </div>
         </Card>
       )}
 

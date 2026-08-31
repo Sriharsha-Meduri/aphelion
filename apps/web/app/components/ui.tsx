@@ -38,9 +38,36 @@ export function Card({ title, action, children }: { title?: string; action?: Rea
 }
 
 export function Loading({ label = 'Loading' }: { label?: string }) {
-  return <div className="loading">{label}...</div>;
+  return (
+    <div className="state-block">
+      <div className="spinner" />
+      <div className="state-hint">{label}...</div>
+    </div>
+  );
 }
 
-export function Empty({ label }: { label: string }) {
-  return <div className="loading">{label}</div>;
+export function Empty({ title, hint }: { title: string; hint?: string }) {
+  return (
+    <div className="state-block">
+      <svg className="state-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="3" y="4" width="18" height="16" rx="2" />
+        <path d="M3 9h18M8 14h8" />
+      </svg>
+      <div className="state-title">{title}</div>
+      {hint && <div className="state-hint">{hint}</div>}
+    </div>
+  );
+}
+
+export function ErrorState({ message }: { message: string }) {
+  return (
+    <div className="state-block">
+      <svg className="state-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{ color: 'var(--red)' }}>
+        <circle cx="12" cy="12" r="9" />
+        <path d="M12 8v4M12 16h.01" />
+      </svg>
+      <div className="state-title">Something went wrong</div>
+      <div className="state-hint">{message}</div>
+    </div>
+  );
 }

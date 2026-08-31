@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { api, type ModelInfo, type Policy } from '../lib/api';
-import { Badge, Card, Loading } from '../components/ui';
+import { Badge, Card, ErrorState, Loading } from '../components/ui';
 
 export default function PolicyPage() {
   const [policy, setPolicy] = useState<Policy | null>(null);
@@ -21,7 +21,7 @@ export default function PolicyPage() {
       .catch(() => setErr(true));
   }, []);
 
-  if (err) return <div className="loading">Cannot reach the API.</div>;
+  if (err) return <ErrorState message="Cannot reach the API. Start it with npm run dev and refresh." />;
   if (!policy || !draft) return <Loading label="Loading policy" />;
 
   const dirty = JSON.stringify(policy) !== JSON.stringify(draft);
@@ -58,7 +58,7 @@ export default function PolicyPage() {
         </div>
       </div>
 
-      <div className="grid cols-2" style={{ gridTemplateColumns: '1.3fr 1fr', alignItems: 'start' }}>
+      <div className="grid split-policy">
         <Card title="Autonomous limits">
           <div className="card-pad stack gap-16">
             <Rupees label="Minimum value to act" hint="Below this, not worth a contact." value={draft.minValuePaise} onChange={(v) => setDraft({ ...draft, minValuePaise: v })} />

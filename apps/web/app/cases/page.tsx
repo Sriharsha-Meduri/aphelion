@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { api, type CaseSummary } from '../lib/api';
 import { inr, pct, when, actionTone } from '../lib/format';
-import { Badge, Card, Loading, StateBadge } from '../components/ui';
+import { Badge, Card, Empty, ErrorState, Loading, StateBadge } from '../components/ui';
 
 const FILTERS = ['all', 'recovered', 'link_created', 'escalated', 'stopped', 'no_action'];
 
@@ -39,12 +39,13 @@ export default function CasesPage() {
 
       <Card>
         {err ? (
-          <div className="loading">Cannot reach the API.</div>
+          <ErrorState message="Cannot reach the API. Start it with npm run dev and refresh." />
         ) : !cases ? (
           <Loading label="Loading cases" />
         ) : cases.length === 0 ? (
-          <div className="loading">No cases in this view.</div>
+          <Empty title="No cases in this view" hint={filter === 'all' ? 'Seed a batch from the overview to populate the queue.' : 'Try a different filter, or seed more cases.'} />
         ) : (
+          <div className="table-wrap">
           <table>
             <thead>
               <tr>
@@ -81,6 +82,7 @@ export default function CasesPage() {
               ))}
             </tbody>
           </table>
+          </div>
         )}
       </Card>
     </>

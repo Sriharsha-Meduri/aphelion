@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { api, type Overview } from './lib/api';
 import { inrCompact, pct, prettyState, stateTone, when, actionTone } from './lib/format';
-import { Badge, Card, Kpi, Loading, StateBadge } from './components/ui';
+import { Badge, Card, Empty, Kpi, Loading, StateBadge } from './components/ui';
 
 export default function OverviewPage() {
   const [data, setData] = useState<Overview | null>(null);
@@ -46,11 +46,12 @@ export default function OverviewPage() {
         <Kpi label="Recovered per contact" value={inrCompact(s.recoveryEfficiencyPaise)} foot={`${s.interventions} contacts made`} />
       </div>
 
-      <div className="grid cols-2 mt-16" style={{ gridTemplateColumns: '1.6fr 1fr' }}>
+      <div className="grid split-main mt-16">
         <Card title="Recent cases" action={<Link className="btn sm" href="/cases">View all</Link>}>
           {data.recentCases.length === 0 ? (
-            <div className="loading">No cases yet. Seed the demo to generate a batch.</div>
+            <Empty title="No cases yet" hint="Seed a batch with the button above to watch the recovery loop run." />
           ) : (
+            <div className="table-wrap">
             <table>
               <thead>
                 <tr>
@@ -68,6 +69,7 @@ export default function OverviewPage() {
                 ))}
               </tbody>
             </table>
+            </div>
           )}
         </Card>
 
@@ -168,7 +170,7 @@ function ApiDown({ message }: { message: string }) {
       <div className="page-head">
         <div>
           <h1 className="page-title">Overview</h1>
-          <p className="page-sub">RecoverAI operations</p>
+          <p className="page-sub">Project Aphelion operations</p>
         </div>
       </div>
       <div className="callout warn" style={{ maxWidth: 620 }}>

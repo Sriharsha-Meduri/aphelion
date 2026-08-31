@@ -4,7 +4,7 @@ import { use, useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { api, type CaseDetail, type Decision } from '../../lib/api';
 import { inr, pct, when, timeOnly, actionTone } from '../../lib/format';
-import { Badge, Card, Loading, StateBadge } from '../../components/ui';
+import { Badge, Card, ErrorState, Loading, StateBadge } from '../../components/ui';
 
 export default function CaseDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -36,7 +36,7 @@ export default function CaseDetailPage({ params }: { params: Promise<{ id: strin
     }
   };
 
-  if (err) return <div className="loading">Cannot load this case.</div>;
+  if (err) return <ErrorState message="Cannot load this case. It may not exist, or the API is unreachable." />;
   if (!data) return <Loading label="Loading case" />;
 
   const c = data.case;
@@ -83,7 +83,7 @@ export default function CaseDetailPage({ params }: { params: Promise<{ id: strin
         </div>
       </div>
 
-      <div className="grid cols-2 mt-16" style={{ gridTemplateColumns: '1fr 1fr', alignItems: 'start' }}>
+      <div className="grid split-even mt-16">
         <div className="stack gap-16">
           {latest && <DecisionCard d={latest} />}
           <Card title="Payment (deterministic facts)">
@@ -121,6 +121,7 @@ export default function CaseDetailPage({ params }: { params: Promise<{ id: strin
         <div className="stack gap-16">
           {data.interventions.length > 0 && (
             <Card title="Interventions">
+              <div className="table-wrap">
               <table>
                 <thead>
                   <tr><th>Type</th><th>Status</th><th>Amount</th><th>Reference</th></tr>
@@ -136,6 +137,7 @@ export default function CaseDetailPage({ params }: { params: Promise<{ id: strin
                   ))}
                 </tbody>
               </table>
+              </div>
             </Card>
           )}
           <Card title="Audit trail">
