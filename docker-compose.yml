@@ -1,0 +1,44 @@
+# Local stack: Postgres plus the RecoverAI API against the real pg repositories.
+# The API still runs in mock Razorpay and mock LLM mode, so no external
+# credentials or real money are involved. Bring it up with: docker compose up
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: recoverai
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d recoverai"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    volumes:
+      - recoverai_pg:/var/lib/postgresql/data
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: "4000"
+      HOST: 0.0.0.0
+      DB_DRIVER: postgres
+      DATABASE_URL: postgres://postgres:postgres@db:5432/recoverai
+      DATABASE_SSL: "false"
+      RAZORPAY_MODE: mock
+      LLM_PROVIDER: mock
+      LOG_PRETTY: "false"
+    command: ["npm", "run", "start:prod"]
+    ports:
+      - "4000:4000"
+
+volumes:
+  recoverai_pg:
