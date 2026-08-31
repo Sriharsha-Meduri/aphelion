@@ -1,0 +1,5 @@
+# Normalize line endings to LF across the repo (consistent on Linux CI and Docker).
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.ico binary

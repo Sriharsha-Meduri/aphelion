@@ -1,0 +1,33 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+.next/
+out/
+*.tsbuildinfo
+
+# Env and secrets (NEVER commit real credentials)
+.env
+.env.*
+!.env.example
+
+# Data and reports that are regenerated
+apps/api/data/*.json
+apps/api/data/*.jsonl
+!apps/api/data/.gitkeep
+
+# Logs
+*.log
+logs/
+
+# Test / coverage
+coverage/
+.vitest/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+.vscode/
