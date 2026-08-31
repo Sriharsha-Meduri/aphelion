@@ -55,5 +55,6 @@ jobs:
           node-version: 20
           cache: npm
       - run: npm ci
-      - run: npm run typecheck -w @recoverai/web
+      # Build first: it generates .next/types that the standalone typecheck references.
       - run: npm run build -w @recoverai/web
+      - run: npm run typecheck -w @recoverai/web
