@@ -49,6 +49,7 @@ export function registerWebhookRoutes(app: FastifyInstance, container: Container
     }
 
     const correlationId = newCorrelationId();
+    // Serialize by payment id so events for the same payment process in order.
     processor.submit(async () => {
       try {
         await pipeline.processEvent(event, correlationId);
@@ -56,7 +57,7 @@ export function registerWebhookRoutes(app: FastifyInstance, container: Container
       } catch (err) {
         await repos.paymentEvents.markProcessed(claimed.id, 'failed', toErrorInfo(err).message);
       }
-    });
+    }, event.payment?.id ?? undefined);
 
     logger.info(
       { event: Events.WEBHOOK_ACCEPTED, providerEventId, correlationId, eventType: event.eventType },
