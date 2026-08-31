@@ -1,0 +1,24 @@
+{
+  "name": "@recoverai/web",
+  "version": "0.1.0",
+  "private": true,
+  "description": "RecoverAI operations dashboard: recovery queue, case audit trail, evaluation, policy.",
+  "scripts": {
+    "dev": "next dev -p 4100",
+    "build": "next build",
+    "start": "next start -p 4100",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "next": "^15.5.4",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.6.0",
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.0",
+    "typescript": "^5.9.2"
+  }
+}
