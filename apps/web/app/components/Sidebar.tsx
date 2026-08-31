@@ -16,8 +16,8 @@ export function Sidebar() {
   return (
     <aside className="sidebar">
       <div className="brand">
-        <div className="brand-mark">R</div>
-        <div className="brand-name">RecoverAI</div>
+        <div className="brand-mark">A</div>
+        <div className="brand-name">Aphelion</div>
       </div>
       {LINKS.map((l) => (
         <Link key={l.href} href={l.href} className={`nav-link ${isActive(l.href) ? 'active' : ''}`}>

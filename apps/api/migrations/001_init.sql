@@ -1,4 +1,4 @@
--- 001_init: core schema for RecoverAI.
+-- 001_init: core schema for Project Aphelion.
 -- Money is stored as integer paise (bigint). Idempotency is enforced by a
 -- UNIQUE provider_event_id on payment_events. Payment and case state use a
 -- version column so a stale event cannot overwrite a newer confirmed state.

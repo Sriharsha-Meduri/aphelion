@@ -17,13 +17,13 @@ export interface PolicyDeps {
 export type PolicyFn = (sc: SyntheticCase, deps: PolicyDeps) => ActionType;
 
 /**
- * Baseline and RecoverAI action policies, compared on the same held-out cases
+ * Baseline and Project Aphelion action policies, compared on the same held-out cases
  * with the same outcome oracle.
  *  - no_action: never intervene (floor).
  *  - contact_all: naive automation, contact everyone except hard-safety stops.
  *  - rules: a sensible human heuristic.
  *  - ml_only: intervene when the model's expected value is positive (no policy).
- *  - recoverai: full engine (calibrated model + EV targeting + policy gates).
+ *  - aphelion: full engine (calibrated model + EV targeting + policy gates).
  */
 export const actionPolicies: Record<string, PolicyFn> = {
   no_action: () => 'NO_ACTION',
@@ -47,7 +47,7 @@ export const actionPolicies: Record<string, PolicyFn> = {
     return ev.expectedValuePaise > 0 ? 'SEND_PAYMENT_LINK' : 'NO_ACTION';
   },
 
-  recoverai: (sc, deps) => {
+  aphelion: (sc, deps) => {
     const ctx = toContext(sc);
     const a: RecoveryAssessment = assessCase(ctx, deps.model, deps.policy, deps.econ);
     const action = a.deterministic.recommendedAction;
@@ -72,7 +72,7 @@ export const actionPolicies: Record<string, PolicyFn> = {
 export const rankScores: Record<string, (sc: SyntheticCase, deps: PolicyDeps) => number> = {
   random: (sc) => hash(sc.id),
   by_amount: (sc) => (sc.optedOut || sc.failureCategory === 'risk_blocked' ? -1 : sc.amount),
-  recoverai: (sc, deps) => {
+  aphelion: (sc, deps) => {
     if (sc.optedOut || sc.failureCategory === 'risk_blocked') return -1;
     const ctx = toContext(sc);
     const risk = assessRisk(ctx);

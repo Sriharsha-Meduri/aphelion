@@ -24,7 +24,7 @@ async function main(): Promise<void> {
       llmProvider: config.llm.provider,
       model: container.model ? container.model.version : 'heuristic-prior-v1',
     },
-    'RecoverAI API is up',
+    'Project Aphelion API is up',
   );
 
   let shuttingDown = false;

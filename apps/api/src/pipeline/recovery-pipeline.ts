@@ -18,7 +18,7 @@ import { customerKey, redactContact } from '../util/redact';
 import { recoveryReferenceId } from '../util/ids';
 import { toErrorInfo } from '../util/errors';
 
-export const DEFAULT_MERCHANT_NAME = 'RecoverAI Demo Store';
+export const DEFAULT_MERCHANT_NAME = 'Aphelion Demo Store';
 
 export interface PipelineDeps {
   config: AppConfig;

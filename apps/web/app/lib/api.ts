@@ -1,4 +1,4 @@
-// Thin client over the RecoverAI API. Requests go to same-origin /api and /demo,
+// Thin client over the Project Aphelion API. Requests go to same-origin /api and /demo,
 // which next.config proxies to the API service.
 
 async function get<T>(path: string): Promise<T> {

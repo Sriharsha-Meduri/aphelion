@@ -1,8 +1,8 @@
 {
-  "name": "@recoverai/api",
+  "name": "@aphelion/api",
   "version": "0.1.0",
   "private": true,
-  "description": "RecoverAI API: webhook ingestion, recovery decision engine, policy gates, Razorpay integration, evaluation.",
+  "description": "Project Aphelion API: webhook ingestion, recovery decision engine, policy gates, Razorpay integration, evaluation.",
   "main": "dist/server.js",
   "scripts": {
     "dev": "tsx watch src/server.ts",

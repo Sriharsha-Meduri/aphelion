@@ -1,5 +1,5 @@
 {
-  "name": "recoverai",
+  "name": "aphelion",
   "version": "0.1.0",
   "private": true,
   "description": "AI-assisted revenue recovery for failed payments. Deterministic financial control, AI reasoning within bounds.",
@@ -11,17 +11,17 @@
     "apps/*"
   ],
   "scripts": {
-    "dev": "npm run dev -w @recoverai/api",
-    "build": "npm run build -w @recoverai/api",
-    "start": "npm run start -w @recoverai/api",
-    "test": "npm run test -w @recoverai/api",
-    "typecheck": "npm run typecheck -w @recoverai/api",
-    "lint": "npm run lint -w @recoverai/api",
-    "migrate": "npm run migrate -w @recoverai/api",
-    "seed": "npm run seed -w @recoverai/api",
-    "eval": "npm run eval -w @recoverai/api",
-    "eval:report": "npm run eval:report -w @recoverai/api",
-    "dev:web": "npm run dev -w @recoverai/web",
-    "build:web": "npm run build -w @recoverai/web"
+    "dev": "npm run dev -w @aphelion/api",
+    "build": "npm run build -w @aphelion/api",
+    "start": "npm run start -w @aphelion/api",
+    "test": "npm run test -w @aphelion/api",
+    "typecheck": "npm run typecheck -w @aphelion/api",
+    "lint": "npm run lint -w @aphelion/api",
+    "migrate": "npm run migrate -w @aphelion/api",
+    "seed": "npm run seed -w @aphelion/api",
+    "eval": "npm run eval -w @aphelion/api",
+    "eval:report": "npm run eval:report -w @aphelion/api",
+    "dev:web": "npm run dev -w @aphelion/web",
+    "build:web": "npm run build -w @aphelion/web"
   }
 }

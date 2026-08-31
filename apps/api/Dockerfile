@@ -8,7 +8,7 @@ COPY apps/api/package.json apps/api/package.json
 RUN npm ci
 
 COPY apps/api ./apps/api
-RUN npm run build -w @recoverai/api
+RUN npm run build -w @aphelion/api
 
 # Prune dev dependencies for the runtime image.
 RUN npm prune --omit=dev

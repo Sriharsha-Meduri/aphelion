@@ -3,7 +3,7 @@ import './globals.css';
 import { Sidebar } from './components/Sidebar';
 
 export const metadata: Metadata = {
-  title: 'RecoverAI',
+  title: 'Project Aphelion',
   description: 'AI-assisted revenue recovery operations',
 };
 

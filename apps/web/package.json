@@ -1,8 +1,8 @@
 {
-  "name": "@recoverai/web",
+  "name": "@aphelion/web",
   "version": "0.1.0",
   "private": true,
-  "description": "RecoverAI operations dashboard: recovery queue, case audit trail, evaluation, policy.",
+  "description": "Project Aphelion operations dashboard: recovery queue, case audit trail, evaluation, policy.",
   "scripts": {
     "dev": "next dev -p 4100",
     "build": "next build",
