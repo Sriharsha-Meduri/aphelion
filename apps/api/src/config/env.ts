@@ -44,6 +44,14 @@ export interface AppConfig {
     /** Baseline probability a customer self-recovers with no intervention (used by the EV net-of-baseline calc). */
     baselineSelfRecovery: number;
   };
+  http: {
+    /** Fixed rate-limit window in milliseconds, per client IP. */
+    rateLimitWindowMs: number;
+    /** Max requests per window for API and demo routes. */
+    rateLimitMax: number;
+    /** Higher ceiling for the webhook route, since providers retry and batch. */
+    rateLimitWebhookMax: number;
+  };
 }
 
 type Env = Record<string, string | undefined>;
@@ -122,6 +130,11 @@ export function loadConfig(env: Env = process.env): AppConfig {
       interventionCostPaise: int(env.INTERVENTION_COST_PAISE, 300),
       riskCostFactor: num(env.RISK_COST_FACTOR, 0.5),
       baselineSelfRecovery: num(env.BASELINE_SELF_RECOVERY, 0.08),
+    },
+    http: {
+      rateLimitWindowMs: int(env.RATE_LIMIT_WINDOW_MS, 60000),
+      rateLimitMax: int(env.RATE_LIMIT_MAX, 240),
+      rateLimitWebhookMax: int(env.RATE_LIMIT_WEBHOOK_MAX, 1200),
     },
   };
 

@@ -20,6 +20,7 @@ export function makeTestConfig(): AppConfig {
     },
     llm: { provider: 'mock', apiKey: undefined, model: 'mock', timeoutMs: 5000, maxRetries: 0, maxTokens: 500, thinkingBudget: 0 },
     economics: { interventionCostPaise: 300, riskCostFactor: 0.5, baselineSelfRecovery: 0.08 },
+    http: { rateLimitWindowMs: 60000, rateLimitMax: 1000000, rateLimitWebhookMax: 1000000 },
   };
 }
 

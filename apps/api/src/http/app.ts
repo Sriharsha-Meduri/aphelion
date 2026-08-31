@@ -2,6 +2,7 @@ import { randomUUID } from 'node:crypto';
 import Fastify, { type FastifyInstance } from 'fastify';
 import type { Container } from '../container';
 import { AppError, toErrorInfo } from '../util/errors';
+import { createRateLimiter } from './rate-limit';
 import { registerHealthRoutes } from './routes/health';
 import { registerWebhookRoutes } from './routes/webhook';
 import { registerApiRoutes } from './routes/api';
@@ -41,6 +42,22 @@ export function buildApp(container: Container): FastifyInstance {
     reply.header('x-frame-options', 'DENY');
     if (req.method === 'OPTIONS') {
       reply.code(204).send();
+    }
+  });
+
+  // Fixed-window rate limiting per client IP. Health checks are exempt; the
+  // webhook has a higher ceiling because providers retry and batch deliveries.
+  const limiter = createRateLimiter(container.config.http.rateLimitWindowMs);
+  app.addHook('onRequest', async (req, reply) => {
+    if (req.method === 'OPTIONS') return;
+    const url = req.url.split('?')[0];
+    if (url === '/health' || url === '/') return;
+    const isWebhook = url.startsWith('/webhooks/');
+    const max = isWebhook ? container.config.http.rateLimitWebhookMax : container.config.http.rateLimitMax;
+    const decision = limiter.check(`${isWebhook ? 'wh' : 'api'}:${req.ip}`, max);
+    if (!decision.ok) {
+      reply.header('retry-after', Math.ceil(decision.retryAfterMs / 1000));
+      reply.code(429).send({ error: 'rate_limited' });
     }
   });
 
