@@ -1,6 +1,6 @@
 # Security Model
 
-RecoverAI acts autonomously on payments, so its security model is the product, not an afterthought. The governing rule is:
+Project Aphelion acts autonomously on payments, so its security model is the product, not an afterthought. The governing rule is:
 
 > AI decides within boundaries. Deterministic code enforces the boundaries.
 
@@ -22,7 +22,7 @@ Razorpay webhooks are authenticated with HMAC-SHA256 over the exact raw request 
 
 ## 3. Idempotency and replay
 
-Razorpay delivers at least once and can retry. Every event carries `X-Razorpay-Event-Id`, which is claimed against a unique constraint before processing. A duplicate delivery is acknowledged with 200 but not processed twice. Because payment state transitions are also guarded by an explicit state machine, a replayed or out-of-order event cannot corrupt state (for example a stale `payment.failed` cannot downgrade a `captured` payment). This double protection (dedup plus state machine) is deliberate.
+Razorpay delivers at least once and can retry. Every event carries `X-Razorpay-Event-Id`, which is claimed against a unique constraint before processing (an atomic `INSERT ... ON CONFLICT DO NOTHING` in Postgres). A duplicate delivery is acknowledged with 200 but not processed twice. Events for the same payment are serialized in the worker (keyed by payment id) so two deliveries for one payment cannot interleave their read-modify-write on the case. Because payment state transitions are also guarded by an explicit state machine, a replayed or out-of-order event cannot corrupt state (for example a stale `payment.failed` cannot downgrade a `captured` payment). This layered protection (dedup, per-payment serialization, state machine) is deliberate.
 
 ## 4. Bounded autonomy: the core control
 
@@ -62,6 +62,7 @@ Money is stored and computed as integer paise; there is no floating point in any
 - If the LLM or the model is unavailable, the deterministic engine still produces a safe decision.
 - If a Payment Link creation fails, the error is recorded and the case stays recoverable; nothing crashes and no money state is left inconsistent.
 - Graceful shutdown drains in-flight work on `SIGTERM`.
+- Request limits: a 256 KB body cap, a 20 second request timeout, and a fixed-window per-IP rate limiter (a generous ceiling for the webhook, a tighter one for the unauthenticated demo and API routes) protect against floods. Health checks are exempt.
 
 ## 10. What is explicitly out of scope for autonomy
 

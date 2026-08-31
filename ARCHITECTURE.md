@@ -1,4 +1,4 @@
-# RecoverAI Architecture
+# Project Aphelion Architecture
 
 ## 1. Problem
 
@@ -128,7 +128,7 @@ See [SECURITY.md](SECURITY.md). In short: signature verification, event idempote
 
 ## 13. Failure recovery
 
-The system fails safe. If the model is down, the deterministic engine acts. If a payment link fails to create, the case stays recoverable. If a duplicate or stale event arrives, it is deduped or rejected by state. If the process restarts, persisted events and case state make the situation inspectable and recoverable.
+The system fails safe. If the model is down, the deterministic engine acts. If a payment link fails to create, the case stays recoverable. If a duplicate or stale event arrives, it is deduped or rejected by state. Events for one payment are serialized in the worker (keyed by payment id), so concurrent deliveries for the same payment cannot interleave their writes to the case. If the process restarts, persisted events and case state make the situation inspectable and recoverable.
 
 ## A real failure and the fix
 
@@ -152,7 +152,7 @@ Single Node service plus PostgreSQL. `docker compose up` starts Postgres; migrat
 
 ## 16. Tradeoffs
 
-- In-process worker instead of a durable queue: simpler for V1, isolated behind one seam so it can be replaced.
+- In-process worker instead of a durable queue: simpler for V1, isolated behind one seam so it can be replaced. It serializes work per payment id today; a durable queue would keep the same ordering guarantee across instances.
 - A logistic regression instead of a heavier model: it is calibrated, fast, fully reproducible in the same toolchain, and good enough that the honest story is targeting quality, not model complexity.
 - The LLM does not change the business numbers. That is reported plainly rather than hidden. Its value is validity, safety, and explanation.
 
